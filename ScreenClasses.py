@@ -6,7 +6,7 @@ import GameLogicClassesAndHandlers
 import math
 
 
-class Game:
+class SectorGame:
     """
     This is one of the most important class in the project. It combines information from Player class and
     ObstacleHandler class to create the game logic. This class also fills the role of game screen, so it does have
@@ -44,7 +44,7 @@ class Game:
         change_game_settings(dict): Changes the game difficulty settings. The dict passed as an argument should be
             an attribute of DifficultyHandler object
     """
-    def __init__(self, player, obstacle_handler):
+    def __init__(self, player, obstacle_handler, difficulty):
         """
         __init__ method of Game class.
 
@@ -61,7 +61,10 @@ class Game:
         self.screen_change = (None, None, None)
         self.score = 0
         self.game_end = False
-        self.difficulty = GameLogicClassesAndHandlers.DifficultyHandler()
+        self.difficulty = GameLogicClassesAndHandlers.DifficultyHandler(difficulty)
+
+    def loop(self):
+        pass
 
     def create_init_obstacle(self):
         """

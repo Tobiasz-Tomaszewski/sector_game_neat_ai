@@ -442,14 +442,14 @@ class DifficultyHandler:
         hard_difficulty (property): Dict containing all information needed to generate game on hard difficulty.
         hard_difficulty (property): Dict containing all information needed to generate game on insane difficulty.
     """
-    def __init__(self):
+    def __init__(self, current_difficulty):
         """
         __init__ method for DIfficultyHandler class.
 
         Returns:
             None: None
         """
-        self.current_difficulty = 'easy'
+        self.current_difficulty = current_difficulty
         self.difficulties = {'easy': self.easy_difficulty,
                              'medium': self.medium_difficulty,
                              'hard': self.hard_difficulty,
