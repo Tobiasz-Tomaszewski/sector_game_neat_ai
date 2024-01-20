@@ -151,16 +151,6 @@ class Game:
                 if keys[pygame.K_r]:
                     self.restart_game()
 
-    def reset_next(self):
-        """
-        This method sets the "screen_change" attribute to (None, None, None). It should be called after changing
-        the screen, so it changes only once and awaits another action that will change the screen.
-
-        Returns:
-            None: None
-        """
-        self.screen_change = (None, None, None)
-
     def restart_game(self):
         """
         Performs all actions necessary to consider the current instance of Game class to be "new". This includes:
@@ -224,22 +214,6 @@ class Game:
                 f.close()
             self.restart_game()
             self.screen_change = (True, 'lost', score)
-
-    def get_from_prev_screen(self, info):
-        """
-        Gets information about game difficulty. This information is passed from menu screen. Menu screen gets this
-        information from ChooseDifficultyScreen class.
-
-        Args:
-            info (GameLogicClassesAndHandlers.DifficultyHandler): Information about the game difficulty.
-
-        Returns:
-            None: None
-        """
-        if info:
-            self.difficulty = info
-            difficulty_dict = self.difficulty.difficulties[self.difficulty.current_difficulty]
-            self.change_game_settings(difficulty_dict)
 
     def change_game_settings(self, settings_dict):
         """
