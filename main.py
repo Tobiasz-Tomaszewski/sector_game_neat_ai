@@ -1,5 +1,5 @@
 import settings
-from ScreenClasses import *
+from game import *
 from GameLogicClassesAndHandlers import *
 
 pygame.init()
