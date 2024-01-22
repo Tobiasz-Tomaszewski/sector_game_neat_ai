@@ -25,7 +25,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    game.handle_screen(text_handler, screen, dt)
+    game.loop(dt)
+    game.draw(screen, text_handler)
     game.handle_events(dt, events)
     game.detect_collision()
 

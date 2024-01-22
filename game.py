@@ -63,8 +63,22 @@ class SectorGame:
         self.game_end = False
         self.difficulty = GameLogicClassesAndHandlers.DifficultyHandler(difficulty)
 
-    def loop(self):
-        pass
+    def draw(self, screen, text_handler):
+        screen.fill(color_palette['background'])
+        self.player.draw_player(screen)
+        self.player.draw_player_path(screen)
+        self.obstacle_handler.draw_obstacles(screen)
+        text_handler.draw_text(screen, str(self.score), color_palette['text'], (width / 2, text_handler.font_size))
+
+    def loop(self, dt):
+        if not self.initial_obstacle:
+            self.create_init_obstacle()
+        self.obstacle_handler.move_all_obstacles(dt)
+        self.obstacle_handler.generate_next()
+        # Deletion of obstacles that reached an end. Increasing player score in case obstacle was removed.
+        if self.obstacle_handler.delete_dead_obstacles():
+            self.score += 1
+        self.check_for_end()
 
     def create_init_obstacle(self):
         """
@@ -89,40 +103,6 @@ class SectorGame:
         """
         self.path_perc += val
 
-    def handle_screen(self, text_handler, screen, dt):
-        """
-        Deals with all action that takes places in a single frame of main pygame loop. For details check comments in the
-        code.
-
-        Args:
-            text_handler (GameLogicClassesAndHandlers.TextHandler): Instance of TextHandler class. Is used to deal with
-                text.
-            screen (pygame.surface.Surface): Screen that the object are being drawn on.
-            dt (float): Delta time in seconds since last frame.
-
-        Returns:
-            None: None
-        """
-        # Fill the screen with the color specified in setting file.
-        screen.fill(color_palette['background'])
-        # Draw player related attributes.
-        self.player.draw_player(screen)
-        self.player.draw_player_path(screen)
-        # Initialize the creation of obstacle in case it was not done yet.
-        if not self.initial_obstacle:
-            self.create_init_obstacle()
-        # Perform obstacle related actions, such as drawing, generating, moving.
-        self.obstacle_handler.draw_obstacles(screen)
-        self.obstacle_handler.move_all_obstacles(dt)
-        self.obstacle_handler.generate_next()
-        # Deletion of obstacles that reached an end. Increasing player score in case obstacle was removed.
-        if self.obstacle_handler.delete_dead_obstacles():
-            self.score += 1
-        # Draw player score
-        text_handler.draw_text(screen, str(self.score), color_palette['text'], (width / 2, text_handler.font_size))
-        # Check if the game should be finished.
-        self.check_for_end()
-
     def handle_events(self, dt, events):
         """
         This method is responsible for handling all events that take place on the screen, such as pressing a key. This
@@ -144,15 +124,6 @@ class SectorGame:
         if keys[pygame.K_LEFT]:
             self.change_path_perc(-dt * self.player.player_speed)
             self.player.move(self.path_perc)
-
-        for event in events:
-            if pygame.KEYUP:
-                # Escape key changes the current screen to the pause screen.
-                if keys[pygame.K_ESCAPE]:
-                    self.screen_change = (True, 'pause', self.score)
-                # Game can be restarted with 'r' key.
-                if keys[pygame.K_r]:
-                    self.restart_game()
 
     def restart_game(self):
         """
