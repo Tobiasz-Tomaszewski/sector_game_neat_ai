@@ -19,7 +19,7 @@ text_handler = TextHandler(40)
 #config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation,
 #                     neat_config_file)
 
-while running:
+while running and not game.game_end:
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:

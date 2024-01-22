@@ -79,6 +79,7 @@ class SectorGame:
         if self.obstacle_handler.delete_dead_obstacles():
             self.score += 1
         self.check_for_end()
+        return self.give_current_game_status()
 
     def create_init_obstacle(self):
         """
@@ -187,7 +188,6 @@ class SectorGame:
                 f.write(str(scores))
                 f.close()
             self.restart_game()
-            self.screen_change = (True, 'lost', score)
 
     def change_game_settings(self, settings_dict):
         """
