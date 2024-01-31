@@ -1,6 +1,7 @@
 import settings
 from game import *
 from GameLogicClassesAndHandlers import *
+import neat
 
 pygame.init()
 
@@ -15,17 +16,32 @@ obstacle_handler = ObstacleHandler(45, 270, 200)
 game = SectorGame(player, obstacle_handler, 'easy')
 text_handler = TextHandler(40)
 
-#neat_config_file = "config.txt"
-#config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation,
-#                     neat_config_file)
+neat_config_file = "config.txt"
+config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation,
+                     neat_config_file)
 
-while running and not game.game_end:
+
+def eval_genomes(genomes, config):
+    pass
+
+
+def run_neat(config):
+    p = neat.Population(config)
+    # p = neat.Checkpointer.restore_checkpoint("name")
+    p.add_reporter(neat.StdOutReporter(True))
+    stats = neat.StatisticsReporter()
+    p.add_reporter(stats)
+    p.add_reporter((neat.Checkpointer(1)))
+    p.run(eval_genomes, 50)
+
+
+while running and not game.exit_loop:
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
             running = False
 
-    game.loop(dt)
+    info = game.loop(dt)
     game.draw(screen, text_handler)
     game.handle_events(dt, events)
     game.detect_collision()
@@ -38,5 +54,5 @@ while running and not game.game_end:
     # dt is delta time in seconds since last frame, used for framerate-independent physics.
     dt = clock.tick(60) / 1000
 
-
+print(info)
 pygame.quit()

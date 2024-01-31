@@ -61,6 +61,7 @@ class SectorGame:
         self.screen_change = (None, None, None)
         self.score = 0
         self.game_end = False
+        self.exit_loop = False
         self.difficulty = GameLogicClassesAndHandlers.DifficultyHandler(difficulty)
 
     def draw(self, screen, text_handler):
@@ -187,6 +188,7 @@ class SectorGame:
                 scores[self.difficulty.current_difficulty] = score
                 f.write(str(scores))
                 f.close()
+            self.exit_loop = True
             self.restart_game()
 
     def change_game_settings(self, settings_dict):
