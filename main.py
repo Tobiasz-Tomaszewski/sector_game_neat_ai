@@ -1,7 +1,6 @@
-import settings
-from game import *
-from GameLogicClassesAndHandlers import *
+from sector import *
 import neat
+import pygame
 
 pygame.init()
 
@@ -13,12 +12,11 @@ music_play = True
 dt = 0
 player = Player(centre, 100, 15, curve_nr=0, path_deviation=0, player_speed=400)
 obstacle_handler = ObstacleHandler(45, 270, 200)
-game = SectorGame(player, obstacle_handler, 'easy')
+game = Game(player, obstacle_handler, 'easy')
 text_handler = TextHandler(40)
 
 neat_config_file = "config.txt"
-config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                     neat_config_file)
+# config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, neat_config_file)
 
 
 def eval_genomes(genomes, config):

@@ -1,59 +1,13 @@
 import pygame
 from pygame.math import Vector2
-from settings import *
+from .settings import *
 import ast
-import GameLogicClassesAndHandlers
+from .GameLogicClassesAndHandlers import *
 import math
 
 
-class SectorGame:
-    """
-    This is one of the most important class in the project. It combines information from Player class and
-    ObstacleHandler class to create the game logic. This class also fills the role of game screen, so it does have
-    all necessary Screen methods and screen_change attribute.
-
-    Attributes:
-        player (GameLogicClassesAndHandlers.Player): Instance of Player class. It contains all information about the
-            player.
-        obstacle_handler (GameLogicClassesAndHandlers.ObstacleHandler): Instance of ObstacleHandler object. It contains
-            all information about current obstacles, can generate and draw new obstacles.
-        path_perc (float): Percentage of the path that tells where the player is currently located in the relation to
-            the path. Is used as argument passed to "move" method.
-        initial_obstacle (bool): Logical value used to initialize the creation of the obstacles.
-        screen_change (tuple): Screen class attribute.
-        score (int): Score of the player. It is calculated based on the number of obstacles that reach the end.
-        game_end (bool): Logical value that indicates whether the player has lost.
-        difficulty (GameLogicClassesAndHandlers.DifficultyHandler): Instance of DifficultyHandler class. Contains all
-            information needed to create new game.
-
-    Methods:
-        create_init_obstacle(): Initializes the process of generating obstacles.
-        change_path_perc(val: float): Changes the player position by changing the "path_perc" attribute.
-        handle_screen(text_handler: GameLogicClassesAndHandlers.TextHandler, screen: pygame.surface.Surface, dt: float):
-            Deals with all action that takes places in a single frame of main pygame loop. This method must be
-            implemented for all screens.
-        handle_events(dt: float, events: list): Handles player events. Should have an event or other condition that can
-            change current screen. This method must be implemented for all screens.
-        reset_next(): Sets "screen_change" parameter to (None, None, None). This method must be implemented for all
-            screens.
-        restart_game(): Performs all actions necessary to consider the current instance of Game class to be "new".
-        detect_collision(): Is responsible for collision logic.
-        check_for_end(): Checks if a game ended, if yes performs all actions necessary at the end of the game.
-        get_from_prev_screen(Any): Is used to pass any type of information to the next screen. This method must be
-            implemented for all screens.
-        change_game_settings(dict): Changes the game difficulty settings. The dict passed as an argument should be
-            an attribute of DifficultyHandler object
-    """
+class Game:
     def __init__(self, player, obstacle_handler, difficulty):
-        """
-        __init__ method of Game class.
-
-        Args:
-            player (GameLogicClassesAndHandlers.Player): Instance of Player class. It contains all information about the
-                player.
-            obstacle_handler (GameLogicClassesAndHandlers.ObstacleHandler): Instance of ObstacleHandler object. It contains
-                all information about current obstacles, can generate and draw new obstacles.
-        """
         self.player = player
         self.obstacle_handler = obstacle_handler
         self.path_perc = 0
@@ -62,7 +16,7 @@ class SectorGame:
         self.score = 0
         self.game_end = False
         self.exit_loop = False
-        self.difficulty = GameLogicClassesAndHandlers.DifficultyHandler(difficulty)
+        self.difficulty = DifficultyHandler(difficulty)
 
     def draw(self, screen, text_handler):
         screen.fill(color_palette['background'])
@@ -83,41 +37,13 @@ class SectorGame:
         return self.give_current_game_status()
 
     def create_init_obstacle(self):
-        """
-        Initializes the process of generating obstacles by creating the new obstacle. Changes "initial_obstacle" value
-        to True, so the process is not repeated.
-
-        Returns:
-            None: None
-        """
         self.obstacle_handler.create_new_obstacle()
         self.initial_obstacle = True
 
     def change_path_perc(self, val):
-        """
-        Changes value of "path_perc" attribute by value passed in the argument.
-
-        Args:
-            val (float): Value that is added to "path_perc" attribute.
-
-        Returns:
-            None: None
-        """
         self.path_perc += val
 
     def handle_events(self, dt, events):
-        """
-        This method is responsible for handling all events that take place on the screen, such as pressing a key. This
-        includes event that changes the screen, so "handle_events" should have action that updates "screen_change"
-        attribute. For details check comments in the code.
-
-        Args:
-            dt (float): Delta time in seconds since last frame.
-            events (list): Events that happened in a single iteration of pygame "while run" loop - pygame.event.get().
-
-        Returns:
-            None: None
-        """
         keys = pygame.key.get_pressed()
         # Player moves are binded to right and left arrows.
         if keys[pygame.K_RIGHT]:
@@ -128,12 +54,6 @@ class SectorGame:
             self.player.move(self.path_perc)
 
     def restart_game(self):
-        """
-        Performs all actions necessary to consider the current instance of Game class to be "new". This includes:
-
-        Returns:
-            None: None
-        """
         self.player.is_alive = True
         self.player.player_position = self.player.move(0)
         self.obstacle_handler.obstacles = {}
@@ -144,13 +64,6 @@ class SectorGame:
         self.game_end = False
 
     def detect_collision(self):
-        """
-        Is responsible for collision logic. It uses "overlap" method of pygame.Mask object. In case the collision
-        between player and obstacle happens, the "game_end" is set to True.
-
-        Returns:
-            None: None
-        """
         player_circle = pygame.Surface((2*self.player.radius, 2*self.player.radius), pygame.SRCALPHA)
         pygame.draw.circle(player_circle, [255, 255, 255], [self.player.radius, self.player.radius], self.player.player_radius)
         player_pos = Vector2(self.player.player_position)
@@ -170,13 +83,6 @@ class SectorGame:
             self.game_end = True
 
     def check_for_end(self):
-        """
-        Check if game ended, based on "game_end" attribute. If yes, overwrites the file with best scores, restarts the
-        game status and changes "screen_change", so the loosing screen can be displayed.
-
-        Returns:
-            None: None
-        """
         if self.game_end:
             score = self.score
             f = open('scores.txt')
@@ -192,17 +98,6 @@ class SectorGame:
             self.restart_game()
 
     def change_game_settings(self, settings_dict):
-        """
-        Restarts the game and changes the attributes of a player and obstacle handler in order to impact game
-            difficulty.
-
-        Args:
-            settings_dict (dict): Dictionary containing all game difficulty info. Those dictionaries have specific
-                format and are stored in DifficultyHandler properties.
-
-        Returns:
-            None: None
-        """
         self.restart_game()
         # player settings
         self.player.radius = settings_dict['player']['radius']
