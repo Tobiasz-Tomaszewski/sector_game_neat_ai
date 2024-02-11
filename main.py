@@ -22,6 +22,23 @@ neat_config_file = "config.txt"
 # config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, neat_config_file)
 
 
+class SectorGame:
+    def __init__(self):
+        pass
+
+    def test_ai(self, net):
+        pass
+
+    def train_ai(self, genome, config, draw=False):
+        pass
+
+    def move_player(self, net):
+        pass
+
+    def calculate_fitness(self, game_info, score):
+        pass
+
+
 def eval_genomes(genomes, config):
     pass
 
@@ -34,6 +51,10 @@ def run_neat(config):
     p.add_reporter(stats)
     p.add_reporter((neat.Checkpointer(1)))
     p.run(eval_genomes, 50)
+
+
+def test_best_network(config):
+    pass
 
 
 while running and not game.exit_loop:
