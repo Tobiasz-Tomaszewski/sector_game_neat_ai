@@ -4,7 +4,7 @@ import pygame
 
 pygame.init()
 
-screen = pygame.display.set_mode((settings.width, settings.height))
+screen = pygame.display.set_mode((width, height))
 
 clock = pygame.time.Clock()
 running = True
@@ -12,7 +12,7 @@ music_play = True
 dt = 0
 player = Player(centre, 100, 15, curve_nr=0, path_deviation=0, player_speed=400)
 obstacle_handler = ObstacleHandler(45, 270, 200)
-game = Game(player, obstacle_handler, 'easy')
+game = Game(player, obstacle_handler, 'hard')
 text_handler = TextHandler(40)
 
 neat_config_file = "config.txt"

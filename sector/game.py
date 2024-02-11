@@ -17,6 +17,7 @@ class Game:
         self.game_end = False
         self.exit_loop = False
         self.difficulty = DifficultyHandler(difficulty)
+        self.change_game_settings(self.difficulty.current_difficulty_dict)
 
     def draw(self, screen, text_handler):
         screen.fill(color_palette['background'])

@@ -170,6 +170,7 @@ class DifficultyHandler:
                              'hard': self.hard_difficulty,
                              'insane': self.insane_difficulty
                              }
+        self.current_difficulty_dict = self.difficulties[self.current_difficulty]
 
     @property
     def easy_difficulty(self):
