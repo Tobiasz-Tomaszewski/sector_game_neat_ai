@@ -7,7 +7,7 @@ import math
 
 
 class Game:
-    def __init__(self, player, obstacle_handler, difficulty):
+    def __init__(self, player, obstacle_handler, difficulty=None):
         self.player = player
         self.obstacle_handler = obstacle_handler
         self.path_perc = 0
@@ -17,7 +17,8 @@ class Game:
         self.game_end = False
         self.exit_loop = False
         self.difficulty = DifficultyHandler(difficulty)
-        self.change_game_settings(self.difficulty.current_difficulty_dict)
+        if difficulty:
+            self.change_game_settings(self.difficulty.current_difficulty_dict)
 
     def draw(self, screen, text_handler):
         screen.fill(color_palette['background'])
@@ -85,16 +86,6 @@ class Game:
 
     def check_for_end(self):
         if self.game_end:
-            score = self.score
-            f = open('scores.txt')
-            s = f.read()
-            f.close()
-            scores = ast.literal_eval(s)
-            if scores[self.difficulty.current_difficulty] < score:
-                f = open('scores.txt', 'w')
-                scores[self.difficulty.current_difficulty] = score
-                f.write(str(scores))
-                f.close()
             self.exit_loop = True
             self.restart_game()
 
@@ -127,7 +118,7 @@ class Game:
                      }
         obstacles_sorted = [obstacle for obstacle in self.obstacle_handler.obstacles.values()]
         obstacles_sorted.sort(key=get_inner_radius)
-        distance_between_obstacles = self.difficulty.difficulties[self.difficulty.current_difficulty]['obstacle_handler']['distance_between_obstacles']
+        distance_between_obstacles = self.obstacle_handler.distance_between_obstacles
         max_possible_number_of_obstacles = int(math.sqrt((centre[0])**2 + (centre[1])**2) / distance_between_obstacles) + 1
         for i in range(max_possible_number_of_obstacles):
             if i < len(obstacles_sorted):

@@ -8,11 +8,14 @@ screen = pygame.display.set_mode((width, height))
 
 clock = pygame.time.Clock()
 running = True
-music_play = True
 dt = 0
 player = Player(centre, 100, 15, curve_nr=0, path_deviation=0, player_speed=400)
 obstacle_handler = ObstacleHandler(45, 270, 200)
-game = Game(player, obstacle_handler, 'hard')
+# Game class has the optional argument "difficulty". If not provided the game will launch with the vales provided by the
+# user above.
+# In case the "difficulty parameter is provided, the user provided values will be overwritten by the ones saved in the
+# difficulty. Available options are 'easy', 'medium', 'hard' and 'insane'.
+game = Game(player, obstacle_handler)
 text_handler = TextHandler(40)
 
 neat_config_file = "config.txt"
